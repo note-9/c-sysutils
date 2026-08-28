@@ -4,12 +4,13 @@
 
 int main(void)
 {
-  int fd1 = open("./test.txt", O_RDONLY);
-  int fd2 = open("./test.txt", O_RDONLY);
-  close(fd1);
-  close(fd2);
+  int fd = open("./test.txt", O_RDONLY);
+  char buffer[1024];
+  ssize_t n = read(fd, buffer, sizeof(buffer));
+  printf("read %zd bytes\n", n);
+  write(STDOUT_FILENO, buffer, n);
+  close(fd);
 
-  printf("fd1 = %d\n", fd1);
-  printf("fd2 = %d\n", fd2);
+  printf("fd = %d\n", fd);
   return 0;
 }
