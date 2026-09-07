@@ -16,19 +16,18 @@ int main(int argc, char *argv[])
     return 1;
   }
   char buffer[1024];
-  ssize_t bytes_read; 
+  size_t lines = 0;
+  size_t bytes = 0;
+  ssize_t bytes_read = 0;
   while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
   {
-    ssize_t bytes_written = 0;
-    while (bytes_written < bytes_read)
+    bytes += bytes_read;
+    for (int i = 0; i < bytes_read; i++)
     {
-      ssize_t n = write(STDOUT_FILENO, buffer + bytes_written, bytes_read - bytes_written);
-      if (n < 0)
+      if (buffer[i] == '\n')
       {
-        perror("write");
-        return 1;
+        lines++;
       }
-      bytes_written += n;
     }
   }
   if (bytes_read < 0)
@@ -38,6 +37,8 @@ int main(int argc, char *argv[])
     return 1;
   }
   close(fd);
+  printf("%zu\n", bytes);
+  printf("%zu\n", lines);
 
   return 0;
 }
